@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Will you be my Valentine? 💘</title>
+  <style>
+    :root{
+      --bg1:#ff6aa2;
+      --bg2:#ff3d77;
+      --card:#ffffffee;
+      --ink:#1f1f1f;
+      --yes:#1ecb76;
+      --no:#ff4d4d;
+      --shadow: 0 20px 60px rgba(0,0,0,.25);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100svh;
+      display:grid;
+      place-items:center;
+      font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(1200px 800px at 20% 20%, #ffd1e3 0%, transparent 55%),
+        radial-gradient(900px 700px at 80% 60%, #ffe7f1 0%, transparent 60%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      overflow:hidden;
+      padding:24px;
+    }
+
+    /* soft sparkles */
+    .sparkles{
+      position:fixed; inset:0; pointer-events:none; opacity:.18;
+      background-image:
+        radial-gradient(circle at 20% 30%, #fff 0 2px, transparent 3px),
+        radial-gradient(circle at 70% 20%, #fff 0 1.8px, transparent 3px),
+        radial-gradient(circle at 60% 70%, #fff 0 2.2px, transparent 3px),
+        radial-gradient(circle at 30% 80%, #fff 0 1.6px, transparent 3px);
+      background-size: 260px 260px;
+      animation: floatBg 8s linear infinite;
+    }
+    @keyframes floatBg{ from{transform:translateY(0)} to{transform:translateY(-30px)} }
+
+    /* floating hearts particles */
+    .hearts-layer{
+      position:fixed; inset:0; pointer-events:none; overflow:hidden;
+    }
+    .heart{
+      position:absolute;
+      font-size:18px;
+      opacity:.9;
+      filter: drop-shadow(0 8px 10px rgba(0,0,0,.18));
+      animation: rise linear forwards;
+      transform: translateY(0);
+      user-select:none;
+      will-change: transform, opacity;
+    }
+    @keyframes rise{
+      to{
+        transform: translateY(-120vh) rotate(18deg);
+        opacity:0;
+      }
+    }
+
+    .card{
+      width:min(560px, 92vw);
+      background:var(--card);
+      border-radius:26px;
+      box-shadow:var(--shadow);
+      padding:26px 22px 22px;
+      text-align:center;
+      position:relative;
+      backdrop-filter: blur(8px);
+    }
+    .badge{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:8px 14px;
+      border-radius:999px;
+      background:#fff;
+      box-shadow: 0 10px 25px rgba(0,0,0,.1);
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+
+    /* photo card (cute animated vibe) */
+    .photo-wrap{
+      margin:18px auto 10px;
+      width:100%;
+      max-width:380px;
+      border-radius:22px;
+      overflow:hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,.25);
+      animation: floatCard 3.6s ease-in-out infinite;
+      position:relative;
+    }
+    .photo-wrap::after{
+      content:"";
+      position:absolute; inset:-2px;
+      border-radius:24px;
+      background: radial-gradient(600px 180px at 30% 0%, rgba(255,255,255,.55), transparent 55%);
+      pointer-events:none;
+      mix-blend-mode: screen;
+      opacity:.65;
+    }
+    .photo-wrap img{
+      width:100%;
+      display:block;
+      object-fit:cover;
+    }
+    @keyframes floatCard{
+      0%{ transform: translateY(0px) rotate(.18deg);}
+      50%{ transform: translateY(-7px) rotate(-.18deg);}
+      100%{ transform: translateY(0px) rotate(.18deg);}
+    }
+
+    h1{
+      margin:12px 0 10px;
+      font-size: clamp(28px, 4.6vw, 44px);
+      line-height:1.08;
+    }
+    p{
+      margin:0 0 14px;
+      font-size: clamp(15px, 2.6vw, 18px);
+      opacity:.92;
+    }
+
+    .musicRow{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      align-items:center;
+      margin:10px 0 4px;
+      flex-wrap:wrap;
+    }
+    .musicBtn{
+      border:0;
+      border-radius:999px;
+      padding:10px 14px;
+      font-weight:900;
+      cursor:pointer;
+      background:#fff;
+      box-shadow: 0 12px 24px rgba(0,0,0,.12);
+      transition: transform .12s ease;
+    }
+    .musicBtn:active{transform: translateY(1px)}
+    .musicHint{
+      font-size:13px;
+      opacity:.75;
+    }
+
+    .buttons{
+      display:flex;
+      justify-content:center;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-top:14px;
+      position:relative;
+      min-height:56px;
+    }
+    button.choice{
+      border:0;
+      border-radius:14px;
+      padding:14px 18px;
+      font-size:18px;
+      font-weight:900;
+      cursor:pointer;
+      transition: transform .12s ease, filter .12s ease;
+      user-select:none;
+    }
+    button.choice:active{transform: translateY(1px) scale(.99)}
+    .yes{
+      background:linear-gradient(180deg, #2df08f, var(--yes));
+      color:#08351f;
+      box-shadow: 0 16px 30px rgba(0,0,0,.18);
+      animation: yesPulse 1.6s ease-in-out infinite;
+    }
+    @keyframes yesPulse{
+      0%,100%{ transform: scale(1); }
+      50%{ transform: scale(1.035); }
+    }
+
+    .no{
+      background:linear-gradient(180deg, #ff7b7b, var(--no));
+      color:#3a0b0b;
+      box-shadow: 0 16px 30px rgba(0,0,0,.18);
+      position:relative;
+    }
+
+    .fineprint{
+      margin-top:14px;
+      font-size:12.5px;
+      opacity:.72;
+    }
+
+    /* Success screen */
+    .success{
+      display:none;
+      margin-top:14px;
+      padding:16px 14px;
+      border-radius:18px;
+      background:#fff;
+      box-shadow: 0 12px 30px rgba(0,0,0,.12);
+    }
+    .success h2{
+      margin:0 0 8px;
+      font-size:24px;
+    }
+    .success .big{
+      font-size:18px;
+      margin:0;
+      font-weight:700;
+    }
+    .signature{
+      margin-top:10px;
+      font-weight:900;
+    }
+    .screenshot{
+      margin-top:10px;
+      font-size:13px;
+      opacity:.78;
+    }
+
+    /* Confetti */
+    .confetti{
+      position:fixed;
+      left:0; top:0;
+      width:100%;
+      height:100%;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    .piece{
+      position:absolute;
+      width:10px;
+      height:14px;
+      border-radius:3px;
+      opacity:.95;
+      transform: translateY(-20px) rotate(0deg);
+      animation: fall linear forwards;
+    }
+    @keyframes fall{
+      to{
+        transform: translateY(120vh) rotate(720deg);
+        opacity:1;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .sparkles{animation:none}
+      .photo-wrap{animation:none}
+      .yes{animation:none}
+      .heart{animation:none}
+      .piece{animation:none}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="sparkles"></div>
+  <div class="hearts-layer" id="heartsLayer"></div>
+  <div class="confetti" id="confetti"></div>
+
+  <main class="card">
+    <div class="badge">💌 Official Valentine Request</div>
+
+    <div class="photo-wrap">
+      <img src="photo.jpg" alt="Cam and Angelica" />
+    </div>
+
+    <h1 id="headline">Will you be my Valentine, Angelica? 💘</h1>
+    <p id="subcopy">This message is legally binding in the court of vibes. Choose wisely 😌</p>
+
+    <div class="musicRow">
+      <button class="musicBtn" id="musicBtn">▶️ Tap to play music</button>
+      <div class="musicHint" id="musicHint">iPhone requires a tap to start audio</div>
+    </div>
+
+    <!-- Put your own mp3 in the same folder and name it music.mp3 -->
+    <audio id="bgMusic" src="music.mp3" preload="auto" loop></audio>
+
+    <div class="buttons" id="btnWrap">
+      <button class="choice yes" id="yesBtn">Yes 💞</button>
+      <button class="choice no" id="noBtn">No 🙃</button>
+    </div>
+
+    <div class="success" id="success">
+      <h2>YAYYYYY! 🥰</h2>
+      <p class="big">
+        Angelica really said YES 💖<br/>
+        Best Valentine decision ever.
+      </p>
+      <div class="signature">Love, Cam 💌</div>
+      <div class="screenshot">📸 Screenshot this as proof you’re my Valentine.</div>
+    </div>
+
+    <div class="fineprint">
+      *Selecting “No” may trigger advanced persuasion technology.
+    </div>
+  </main>
+
+  <script>
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const success = document.getElementById("success");
+    const wrap = document.getElementById("btnWrap");
+    const confetti = document.getElementById("confetti");
+    const heartsLayer = document.getElementById("heartsLayer");
+
+    const musicBtn = document.getElementById("musicBtn");
+    const bgMusic = document.getElementById("bgMusic");
+    let musicPlaying = false;
+
+    // extra sassy "No"
+    const noReasons = [
+      "Absolutely not. Try again 😌",
+      "Angelica… be serious 😂",
+      "This button is decorative 💅",
+      "Be fr. Click Yes 💘",
+      "The audacity??? Try Yes again",
+      "Wrong answer but I still love you",
+      "System override: you meant YES"
+    ];
+
+    let noCount = 0;
+
+    function popConfetti() {
+      confetti.innerHTML = "";
+      const pieces = 130;
+      for (let i = 0; i < pieces; i++) {
+        const p = document.createElement("div");
+        p.className = "piece";
+        const left = Math.random() * 100;
+        const delay = Math.random() * 0.25;
+        const duration = 2.2 + Math.random() * 1.7;
+        const hue = Math.floor(Math.random() * 360);
+
+        p.style.background = `hsl(${hue} 90% 65%)`;
+        p.style.left = left + "vw";
+        p.style.animationDuration = duration + "s";
+        p.style.animationDelay = delay + "s";
+        p.style.top = (-20 - Math.random() * 40) + "px";
+        confetti.appendChild(p);
+      }
+      setTimeout(() => confetti.innerHTML = "", 4500);
+    }
+
+    function startHearts() {
+      // continuously spawn floating hearts
+      const heartChars = ["💖","💘","💗","💕","💞","❤️","💓"];
+      setInterval(() => {
+        const h = document.createElement("div");
+        h.className = "heart";
+        h.textContent = heartChars[Math.floor(Math.random() * heartChars.length)];
+
+        const left = Math.random() * 100;
+        const size = 14 + Math.random() * 18;
+        const duration = 4.5 + Math.random() * 3.5;
+
+        h.style.left = left + "vw";
+        h.style.bottom = "-30px";
+        h.style.fontSize = size + "px";
+        h.style.animationDuration = duration + "s";
+
+        // slight horizontal drift
+        const drift = (Math.random() * 80) - 40;
+        h.style.transform = `translateX(${drift}px)`;
+
+        heartsLayer.appendChild(h);
+        setTimeout(() => h.remove(), (duration + 0.2) * 1000);
+      }, 260);
+    }
+
+    function showSuccess() {
+      success.style.display = "block";
+      wrap.style.display = "none";
+      popConfetti();
+
+      // extra heart burst
+      for (let i = 0; i < 18; i++) {
+        const h = document.createElement("div");
+        h.className = "heart";
+        h.textContent = "💘";
+        h.style.left = (45 + (Math.random()*10-5)) + "vw";
+        h.style.bottom = "10vh";
+        h.style.fontSize = (18 + Math.random()*18) + "px";
+        h.style.animationDuration = (2.2 + Math.random()*1.2) + "s";
+        heartsLayer.appendChild(h);
+        setTimeout(() => h.remove(), 3200);
+      }
+
+      document.title = "She said YES 💘";
+      document.getElementById("subcopy").textContent = "Locked in. Official. Certified. 💍 (Valentine edition)";
+    }
+
+    function scootNoButton() {
+      // chaos mode: it runs away
+      const x = Math.random() * 240 - 120;
+      const y = Math.random() * 160 - 80;
+      noBtn.style.transform = `translate(${x}px, ${y}px) rotate(${Math.random()*12-6}deg)`;
+    }
+
+    noBtn.addEventListener("click", () => {
+      noCount++;
+
+      const msg = noReasons[Math.floor(Math.random() * noReasons.length)];
+      noBtn.textContent = msg;
+
+      // make YES more irresistible each time
+      yesBtn.style.transform = `scale(${1 + Math.min(noCount, 7) * 0.06})`;
+
+      if (noCount >= 2) scootNoButton();
+
+      if (noCount >= 6) {
+        noBtn.textContent = "Ok fine… YES 🙄💘";
+        noBtn.classList.remove("no");
+        noBtn.classList.add("yes");
+        noBtn.style.transform = "none";
+        noBtn.onclick = showSuccess;
+      }
+    });
+
+    yesBtn.addEventListener("click", showSuccess);
+
+    // Tap-to-play music (iOS requirement)
+    async function toggleMusic() {
+      try{
+        if (!musicPlaying) {
+          await bgMusic.play();
+          musicPlaying = true;
+          musicBtn.textContent = "⏸ Pause music";
+        } else {
+          bgMusic.pause();
+          musicPlaying = false;
+          musicBtn.textContent = "▶️ Tap to play music";
+        }
+      } catch (e) {
+        // If file missing or blocked, keep it friendly
+        document.getElementById("musicHint").textContent =
+          "If music doesn’t play, make sure music.mp3 is uploaded with the page 💗";
+      }
+    }
+    musicBtn.addEventListener("click", toggleMusic);
+
+    // Start ambient hearts
+    startHearts();
+  </script>
+</body>
+</html>
